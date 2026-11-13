@@ -1,0 +1,24 @@
+<div class="container d-flex justify-content-center align-items-center vh-100 bg-light">
+  <div class="card shadow p-4" style="width: 100%; max-width: 400px;">
+    <div class="text-center mb-4">
+      <h3 class="fw-bold text-primary">Sistema de Adultos Mayores</h3>
+      <p class="text-muted">Iniciar Sesión</p>
+    </div>
+
+    <form (ngSubmit)="onLogin()">
+      <div class="mb-3">
+        <label class="form-label">Correo electrónico</label>
+        <input type="email" class="form-control" name="correo" [(ngModel)]="correo" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Contraseña</label>
+        <input type="password" class="form-control" name="password" [(ngModel)]="password" required>
+      </div>
+      <button type="submit" class="btn btn-primary w-100 mb-3">Ingresar al Sistema</button>
+    </form>
+
+    <div *ngIf="error" class="alert alert-danger mt-3">
+      {{ error }}
+    </div>
+  </div>
+</div>
