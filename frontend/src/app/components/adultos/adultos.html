@@ -1,121 +1,352 @@
-<div class="container mt-5">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Gestión de Adultos Mayores</h2>
-    <a routerLink="/dashboard" class="btn btn-secondary">Volver al Panel</a>
-  </div>
-
-  <div class="row">
-    <!-- Formulario -->
-    <div class="col-md-5 mb-4">
-      <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-          <h5 class="mb-0">Registrar Nuevo Adulto Mayor</h5>
-        </div>
-        <div class="card-body">
-          <form (ngSubmit)="guardarAdulto()">
-            <div class="mb-2">
-              <label>Nombre Completo</label>
-              <input type="text" class="form-control" [(ngModel)]="nuevoAdulto.nombre_completo" name="nombre" required>
-            </div>
-            <div class="mb-2">
-              <label>Edad</label>
-              <input type="number" class="form-control" [(ngModel)]="nuevoAdulto.edad" name="edad" required>
-            </div>
-            <div class="mb-2">
-              <label>Enfermedades</label>
-              <input type="text" class="form-control" [(ngModel)]="nuevoAdulto.enfermedades" name="enfermedades">
-            </div>
-            <div class="mb-2">
-              <label>Familiar Responsable</label>
-              <input type="text" class="form-control" [(ngModel)]="nuevoAdulto.familiar_responsable" name="familiar" required>
-            </div>
-            <div class="mb-2">
-              <label>Teléfono</label>
-              <input type="text" class="form-control" [(ngModel)]="nuevoAdulto.telefono_contacto" name="telefono" required>
-            </div>
-            <div class="mb-3">
-              <label>Dirección</label>
-              <input type="text" class="form-control" [(ngModel)]="nuevoAdulto.direccion" name="direccion" required>
-            </div>
-            <button type="submit" class="btn btn-success w-100">Guardar Registro</button>
-          </form>
-        </div>
+<div class="d-flex" style="min-height: 100vh;">
+  
+  <!-- MENÚ LATERAL -->
+  <div class="text-white d-none d-md-flex flex-column p-4 sticky-top" style="width: 280px; background-color: var(--azul-marino); height: 100vh; flex-shrink: 0;">
+    <div class="d-flex align-items-center gap-2 mb-5">
+      <i class="bi bi-person-wheelchair fs-3"></i>
+      <div>
+        <h6 class="mb-0 fw-bold text-white" style="font-family: 'Inter', sans-serif;">Sistema Social</h6>
+        <small class="text-white-50">Adultos Mayores</small>
       </div>
     </div>
+    <ul class="nav flex-column mb-auto">
+      <li class="nav-item mb-2">
+        <a class="nav-link text-white-50 rounded px-3 py-3 d-flex align-items-center gap-3" routerLink="/dashboard">
+          <i class="bi bi-grid-1x2"></i> Inicio
+        </a>
+      </li>
+      <li class="nav-item mb-2">
+        <a class="nav-link text-white active rounded px-3 py-3 fw-bold d-flex align-items-center gap-3" style="background-color: rgba(255,255,255,0.1);" routerLink="/adultos">
+          <i class="bi bi-person-plus"></i> Registrar Adulto
+        </a>
+      </li>
+      <li class="nav-item mb-2">
+        <a class="nav-link text-white-50 rounded px-3 py-3 d-flex align-items-center gap-3" routerLink="/adultos" [queryParams]="{ verHistorial: 'true' }">
+          <i class="bi bi-house-door"></i> Historial de Visitas
+        </a>
+      </li>
+      <li class="nav-item mb-2">
+        <a class="nav-link text-white-50 rounded px-3 py-3 d-flex align-items-center gap-3" routerLink="/adultos" [queryParams]="{ verReportes: 'true' }">
+          <i class="bi bi-bar-chart"></i> Reportes
+        </a>
+      </li>
+    </ul>
+    <div class="bg-white bg-opacity-10 rounded-3 p-3 mt-4 text-white-50" style="font-size: 0.85rem;">
+      <p class="mb-1 fw-bold text-white">Soporte Institucional</p>
+      <p class="mb-0">0800-444-SENIOR</p>
+    </div>
+  </div>
 
-    <!-- Tabla -->
-    <div class="col-md-7">
-      <div class="card shadow">
-        <div class="card-header bg-dark text-white">
-          <h5 class="mb-0">Lista de Adultos Mayores</h5>
+  <!-- CONTENIDO PRINCIPAL -->
+  <div class="flex-grow-1 bg-light" style="overflow-x: hidden;">
+    
+    <!-- BARRA SUPERIOR (HEADER) -->
+    <header class="bg-white px-4 py-3 d-flex justify-content-between align-items-center border-bottom">
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn btn-light d-md-none border" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuMovil">
+          <i class="bi bi-list fs-4"></i>
+        </button>
+        <h5 class="mb-0 fw-bold">Panel de Control</h5>
+        <span class="text-muted d-none d-lg-block">| Portal de Gestión y Bienestar Social</span>
+      </div>
+      
+      <div class="d-flex align-items-center gap-3">
+        <div class="btn-group bg-light rounded-pill p-1 d-none d-sm-flex">
+          <button class="btn btn-sm btn-link text-dark text-decoration-none" (click)="cambiarFuente('16px')">A</button>
+          <button class="btn btn-sm btn-link text-dark text-decoration-none" (click)="cambiarFuente('18px')">A+</button>
+          <button class="btn btn-sm btn-link text-dark text-decoration-none" (click)="cambiarFuente('20px')">A++</button>
         </div>
+        
+        <button class="btn btn-success btn-sm rounded-pill px-3 fw-bold d-none d-md-flex align-items-center gap-2" (click)="llamarAsistencia()">
+          <i class="bi bi-telephone-fill"></i> Asistencia Directa
+        </button>
+        
+        <div class="dropdown border-start ps-3 ms-2">
+          <button class="btn btn-light d-flex align-items-center gap-2 dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            <div class="text-end d-none d-lg-block">
+              <p class="mb-0 fw-bold small">{{ nombreUsuario }}</p>
+<small class="text-muted" style="font-size: 0.75rem;">Cuenta Activa</small>
+            </div>
+            <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width: 40px; height: 40px;">
+              <i class="bi bi-person-fill fs-5"></i>
+            </div>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end shadow">
+            <li><button class="dropdown-item text-danger fw-bold" (click)="cerrarSesion()"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</button></li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENIDO DE LA TABLA -->
+    <div class="container-fluid py-4 px-4">
+      
+      <!-- Título (Sin el botón duplicado) -->
+      <div class="mb-4">
+        <p class="text-muted small mb-1"><i class="bi bi-geo-alt-fill"></i> Padrón Territorial Oficial • Vigencia 2026</p>
+        <h2 class="fw-bold mb-1" style="color: var(--azul-marino);">Seguimiento y Padrón de Adultos Mayores</h2>
+        <p class="text-muted mb-0">Monitoreo integral, historial sociosanitario y control de visitas.</p>
+      </div>
+
+      <!-- TARJETAS DE RESUMEN -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm p-3 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="text-muted fw-bold mb-1">Total Padrón</h6>
+                <h3 class="fw-bold mb-0">{{ adultos.length }}</h3>
+              </div>
+              <div class="bg-primary bg-opacity-10 text-primary rounded p-2"><i class="bi bi-people-fill fs-4"></i></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm p-3 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="text-muted fw-bold mb-1">Visitas Pendientes</h6>
+                <h3 class="fw-bold mb-0">{{ visitasPendientes }}</h3>
+              </div>
+              <div class="bg-warning bg-opacity-10 text-warning rounded p-2"><i class="bi bi-calendar-event fs-4"></i></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm p-3 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="text-muted fw-bold mb-1">Alertas Activas</h6>
+                <h3 class="fw-bold mb-0 text-danger">{{ adultosCriticos }}</h3>
+              </div>
+              <div class="bg-danger bg-opacity-10 text-danger rounded p-2"><i class="bi bi-bell-fill fs-4"></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra de Búsqueda y Botones de Acción -->
+      <div class="card border-0 shadow-sm p-3 mb-4">
+        <div class="row g-3 align-items-center">
+          <div class="col-md-5">
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+              <input type="text" class="form-control border-start-0" placeholder="Buscar adulto mayor por nombre..." [(ngModel)]="filtroBusqueda" (input)="filtrarAdultos()">
+            </div>
+          </div>
+          <div class="col-md-7 d-flex gap-2 justify-content-md-end">
+            <button class="btn btn-light border fw-bold text-muted" (click)="exportarPadron()"><i class="bi bi-download"></i> Exportar Padrón</button>
+            <button class="btn btn-light border fw-bold text-muted" (click)="filtrarPorCuidador()"><i class="bi bi-funnel"></i> Filtrar por Cuidador</button>
+            <button class="btn btn-primary fw-bold" (click)="abrirModalRegistro()"><i class="bi bi-person-plus-fill"></i> Agregar Nuevo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filtros Rápidos -->
+      <div class="d-flex flex-wrap gap-2 mb-4 align-items-center">
+        <span class="text-muted small fw-bold me-2"><i class="bi bi-funnel"></i> Filtros rápidos:</span>
+        <button class="btn btn-dark btn-sm rounded-pill px-3 fw-bold">Todos los estados ({{ adultos.length }})</button>
+        <button class="btn btn-light border btn-sm rounded-pill px-3 text-danger fw-bold"><i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i> Estado de Salud: Crítico</button>
+        <button class="btn btn-light border btn-sm rounded-pill px-3 text-muted fw-bold"><i class="bi bi-geo-alt"></i> Sector: Zona Norte</button>
+      </div>
+
+      <!-- Tabla de Adultos Mayores -->
+      <div class="card border-0 shadow-sm">
         <div class="card-body p-0">
-          <table class="table table-hover mb-0">
-            <thead class="table-light">
-              <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Edad</th>
-                <th>Familiar</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let adulto of adultos">
-                <td>{{ adulto.id }}</td>
-                <td>{{ adulto.nombre_completo }}</td>
-                <td>{{ adulto.edad }}</td>
-                <td>{{ adulto.familiar_responsable }}</td>
-                <td>
-                  <button class="btn btn-sm btn-info text-white me-1" (click)="verHistorial(adulto)">Ver Historial</button>
-                  <button class="btn btn-sm btn-warning me-1" (click)="editarAdulto(adulto)">Editar</button>
-                  <button class="btn btn-sm btn-danger" (click)="eliminarAdulto(adulto.id!)">Eliminar</button>
-                </td>
-              </tr>
-              <tr *ngIf="adultos.length === 0">
-                <td colspan="5" class="text-center py-4">No hay adultos registrados aún.</td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light text-muted small text-uppercase">
+                <tr>
+                  <th class="ps-4 py-3">Nombre y Ficha</th>
+                  <th>Edad</th>
+                  <th>Última Visita</th>
+                  <th>Estado</th>
+                  <th class="text-end pe-4">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let adulto of adultosFiltrados">
+                  <td class="ps-4 py-3">
+                    <div class="d-flex align-items-center gap-3">
+                      <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex justify-content-center align-items-center fw-bold" style="width: 45px; height: 45px;">
+                        {{ adulto.nombre_completo.charAt(0) }}
+                      </div>
+                      <div>
+                        <h6 class="mb-0 fw-bold">{{ adulto.nombre_completo }}</h6>
+                        <small class="text-muted">DNI/Tel: {{ adulto.telefono_contacto }}</small>
+                        <div class="small text-muted"><i class="bi bi-geo-alt-fill"></i> {{ adulto.direccion }}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="fw-semibold">{{ adulto.edad }} años</td>
+                  <td>
+                    <div class="small fw-bold">{{ adulto.ultima_visita_fecha }}</div>
+                    <div class="small text-muted"><i class="bi bi-person"></i> {{ adulto.ultima_visita_por }}</div>
+                  </td>
+                  <td>
+                    <span *ngIf="!adulto.estado || adulto.estado === 'Estable'" class="badge bg-success bg-opacity-25 text-success rounded-pill px-3 py-2">
+                      <i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i> Estable
+                    </span>
+                    <span *ngIf="adulto.estado === 'Pendiente'" class="badge bg-warning bg-opacity-25 text-warning rounded-pill px-3 py-2">
+                      <i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i> Pendiente
+                    </span>
+                    <span *ngIf="adulto.estado === 'Crítico'" class="badge bg-danger bg-opacity-25 text-danger rounded-pill px-3 py-2">
+                      <i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i> Crítico
+                    </span>
+                  </td>
+                  <td class="text-end pe-4">
+                    <button class="btn btn-sm btn-outline-primary fw-bold me-1" (click)="verHistorial(adulto)">
+                      <i class="bi bi-eye"></i> Historial
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary me-1" (click)="editarAdulto(adulto)">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="eliminarAdulto(adulto.id!)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+                <tr *ngIf="adultosFiltrados.length === 0">
+                  <td colspan="5" class="text-center py-5 text-muted">
+                    <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                    No se encontraron adultos mayores registrados.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
+
     </div>
   </div>
+</div>
 
-  <!-- MODAL DE HISTORIAL DE VISITAS -->
-  <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" *ngIf="mostrarHistorial">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header bg-info text-white">
-          <h5 class="modal-title">Historial de Visitas: {{ adultoSeleccionado?.nombre_completo }}</h5>
-          <button type="button" class="btn-close" (click)="cerrarHistorial()"></button>
+<!-- MODAL DE REGISTRO / EDICIÓN -->
+<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(10,37,64,0.6); overflow-y: auto;" *ngIf="mostrarModalRegistro">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content border-0 shadow-lg rounded-4">
+      
+      <div class="modal-header bg-white border-bottom-0 pt-4 px-4 pb-0">
+        <div>
+          <span class="badge bg-success bg-opacity-25 text-success rounded-pill px-3 py-1 mb-2"><i class="bi bi-shield-check"></i> Datos protegidos</span>
+          <h4 class="modal-title fw-bold" style="color: var(--azul-marino);">{{ nuevoAdulto.id ? 'Editar Ficha de Registro' : 'Ficha de Registro de la Persona Mayor' }}</h4>
+          <p class="text-muted small mt-1">Complete la información personal y de salud para el seguimiento.</p>
         </div>
-        <div class="modal-body">
+        <button type="button" class="btn-close" (click)="cerrarModalRegistro()"></button>
+      </div>
+      
+      <div class="modal-body px-4 py-4">
+        <form (ngSubmit)="guardarAdulto()">
           
-          <!-- Formulario para agregar nueva visita -->
-          <div class="card mb-3 shadow-sm">
-            <div class="card-body bg-light">
-              <h6>Registrar Nueva Visita</h6>
-              <div class="row">
-                <div class="col-md-3 mb-2">
-                  <label>Fecha</label>
-                  <input type="date" class="form-control" [(ngModel)]="nuevaVisita.fecha">
+          <div class="card bg-light border-0 mb-4 rounded-4">
+            <div class="card-body p-4">
+              <h6 class="fw-bold mb-3 d-flex align-items-center gap-2" style="color: var(--azul-marino);">
+                <i class="bi bi-person-vcard fs-5"></i> 1. Datos Personales
+              </h6>
+              <div class="row g-3">
+                <div class="col-md-12">
+                  <label class="form-label fw-bold small">Nombre completo <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" [(ngModel)]="nuevoAdulto.nombre_completo" name="nombre" required placeholder="Ej: María Elena Rodríguez Sánchez">
                 </div>
-                <div class="col-md-4 mb-2">
-                  <label>Visitado por</label>
-                  <input type="text" class="form-control" [(ngModel)]="nuevaVisita.visitado_por" placeholder="Nombre del cuidador">
+                <div class="col-md-6">
+                  <label class="form-label fw-bold small">Edad <span class="text-danger">*</span></label>
+                  <input type="number" class="form-control" [(ngModel)]="nuevoAdulto.edad" name="edad" required placeholder="Ej: 78">
                 </div>
-                <div class="col-md-5 mb-2">
-                  <label>Observaciones</label>
-                  <input type="text" class="form-control" [(ngModel)]="nuevaVisita.observaciones" placeholder="¿Cómo se encuentra?">
+                <div class="col-md-6">
+                  <label class="form-label fw-bold small">Teléfono / DNI</label>
+                  <input type="text" class="form-control" [(ngModel)]="nuevoAdulto.telefono_contacto" name="telefono" placeholder="Ej: 987654321">
                 </div>
               </div>
-              <button class="btn btn-primary btn-sm mt-2" (click)="guardarVisita()">Guardar Visita</button>
             </div>
           </div>
 
-          <!-- Tabla de visitas anteriores -->
-          <table class="table table-striped table-hover">
+          <div class="card bg-light border-0 mb-4 rounded-4">
+            <div class="card-body p-4">
+              <h6 class="fw-bold mb-3 d-flex align-items-center gap-2" style="color: var(--azul-marino);">
+                <i class="bi bi-heart-pulse fs-5"></i> 2. Salud y Antecedentes Clínicos
+              </h6>
+              <div class="row g-3">
+                <div class="col-12">
+                  <label class="form-label fw-bold small">Enfermedades preexistentes / Medicación</label>
+                  <textarea class="form-control" rows="3" [(ngModel)]="nuevoAdulto.enfermedades" name="enfermedades" placeholder="Ej: Hipertensión, diabetes, artrosis, alergias a medicamentos..."></textarea>
+                  <small class="text-muted d-block mt-2"><i class="bi bi-info-circle"></i> Puede copiar los nombres impresos en sus recetas o cajas de medicamentos.</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card bg-light border-0 mb-4 rounded-4">
+            <div class="card-body p-4">
+              <h6 class="fw-bold mb-3 d-flex align-items-center gap-2" style="color: var(--azul-marino);">
+                <i class="bi bi-geo-alt fs-5"></i> 3. Contacto y Ubicación
+              </h6>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label fw-bold small">Familiar o cuidador responsable <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" [(ngModel)]="nuevoAdulto.familiar_responsable" name="familiar" required placeholder="Ej: Juan Carlos Rodríguez (Hijo)">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-bold small">Dirección residencial <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" [(ngModel)]="nuevoAdulto.direccion" name="direccion" required placeholder="Ej: Calle Los Álamos 456, Huancayo">
+                </div>
+                <div class="col-md-12 mt-3">
+                  <label class="form-label fw-bold small">Estado de Salud Actual <span class="text-danger">*</span></label>
+                  <select class="form-select" [(ngModel)]="nuevoAdulto.estado" name="estado" required>
+                    <option value="Estable">🟢 Estable (Requiere seguimiento rutinario)</option>
+                    <option value="Pendiente">🟡 Pendiente (Requiere atención pronta)</option>
+                    <option value="Crítico">🔴 Crítico (Atención prioritaria o médica)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+            <button type="button" class="btn btn-light fw-bold border px-4 py-2" (click)="cerrarModalRegistro()">
+              <i class="bi bi-arrow-left"></i> Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary fw-bold px-4 py-2 shadow-sm" style="background-color: var(--azul-marino);">
+              <i class="bi bi-save"></i> Guardar Registro Oficial
+            </button>
+          </div>
+          
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DE HISTORIAL DE VISITAS -->
+<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(10,37,64,0.6);" *ngIf="mostrarHistorial">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg rounded-4">
+      <div class="modal-header text-white rounded-top-4" style="background-color: var(--verde-menta);">
+        <h5 class="modal-title fw-bold"><i class="bi bi-journal-medical"></i> Historial: {{ adultoSeleccionado?.nombre_completo }}</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="cerrarHistorial()"></button>
+      </div>
+      <div class="modal-body p-4">
+        
+        <div class="card bg-light border-0 mb-4">
+          <div class="card-body">
+            <h6 class="fw-bold mb-3">Registrar Nueva Visita</h6>
+            <div class="row g-2">
+              <div class="col-md-4">
+                <input type="date" class="form-control" [(ngModel)]="nuevaVisita.fecha">
+              </div>
+              <div class="col-md-4">
+                <input type="text" class="form-control" [(ngModel)]="nuevaVisita.visitado_por" placeholder="Visitado por...">
+              </div>
+              <div class="col-md-4">
+                <input type="text" class="form-control" [(ngModel)]="nuevaVisita.observaciones" placeholder="Observaciones...">
+              </div>
+            </div>
+            <button class="btn btn-primary btn-sm mt-3 fw-bold" (click)="guardarVisita()"><i class="bi bi-plus-circle"></i> Añadir Visita</button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
             <thead class="table-dark">
               <tr>
                 <th>Fecha</th>
@@ -125,20 +356,18 @@
             </thead>
             <tbody>
               <tr *ngFor="let v of visitas">
-                <td>{{ v.fecha }}</td>
+                <td class="fw-bold">{{ v.fecha }}</td>
                 <td>{{ v.visitado_por }}</td>
                 <td>{{ v.observaciones }}</td>
               </tr>
               <tr *ngIf="visitas.length === 0">
-                <td colspan="3" class="text-center">No hay visitas registradas aún.</td>
+                <td colspan="3" class="text-center py-3 text-muted">No hay visitas registradas aún.</td>
               </tr>
             </tbody>
           </table>
-
         </div>
+
       </div>
     </div>
   </div>
-  <!-- FIN DEL MODAL -->
-
 </div>

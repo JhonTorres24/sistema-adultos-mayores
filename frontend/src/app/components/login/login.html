@@ -1,24 +1,126 @@
-<div class="container d-flex justify-content-center align-items-center vh-100 bg-light">
-  <div class="card shadow p-4" style="width: 100%; max-width: 400px;">
+<!-- ENCABEZADO SUPERIOR -->
+<header class="bg-white border-bottom py-3 px-4 d-flex justify-content-between align-items-center sticky-top shadow-sm">
+  <div class="d-flex align-items-center gap-2">
+    <i class="bi bi-person-wheelchair fs-3" style="color: var(--azul-marino);"></i>
+    <div>
+      <h6 class="mb-0 fw-bold" style="color: var(--azul-marino);">Sistema de Adultos Mayores</h6>
+      <small class="text-muted d-none d-sm-block">Portal de Gestión y Bienestar Social</small>
+    </div>
+  </div>
+  
+  <div class="d-flex align-items-center gap-3">
+    <div class="btn-group bg-light rounded-pill p-1 d-none d-md-flex">
+      <button class="btn btn-sm btn-link text-dark text-decoration-none" (click)="cambiarFuente('16px')">A</button>
+      <button class="btn btn-sm btn-link text-dark text-decoration-none" (click)="cambiarFuente('18px')">A+</button>
+      <button class="btn btn-sm btn-link text-dark text-decoration-none" (click)="cambiarFuente('20px')">A++</button>
+    </div>
+    <!-- Botón de Asistencia funcional -->
+    <button class="btn btn-success btn-sm rounded-pill px-3 d-none d-md-flex align-items-center gap-2" (click)="llamarAsistencia()">
+      <i class="bi bi-telephone-fill"></i> Asistencia Directa
+    </button>
+  </div>
+</header>
+
+<!-- CUERPO DEL LOGIN -->
+<div class="container d-flex justify-content-center align-items-center py-5" style="min-height: calc(100vh - 80px);">
+  <div class="card p-4 p-md-5" style="max-width: 520px; width: 100%;">
+    
+    <!-- Logo central con icono -->
     <div class="text-center mb-4">
-      <h3 class="fw-bold text-primary">Sistema de Adultos Mayores</h3>
-      <p class="text-muted">Iniciar Sesión</p>
+      <div class="mb-2">
+        <i class="bi bi-people-fill display-4" style="color: var(--azul-marino);"></i>
+      </div>
+      <h2 class="fw-bold mt-3">Iniciar Sesión</h2>
+      <p class="text-muted small">Acceda a la plataforma de gestión social y bienestar para personas adultas mayores y cuidadores.</p>
+    </div>
+
+    <!-- Barra de accesibilidad rápida -->
+    <div class="bg-light rounded p-2 mb-4 d-flex justify-content-between align-items-center">
+      <span class="text-muted small fw-bold"><i class="bi bi-eye-fill"></i> Accesibilidad rápida:</span>
+      <div>
+        <button class="btn btn-sm btn-white border shadow-sm me-1" (click)="cambiarFuente('18px')">A+ Texto</button>
+        <button class="btn btn-sm btn-white border shadow-sm" (click)="toggleContraste()"><i class="bi bi-circle-half"></i> Contraste</button>
+      </div>
     </div>
 
     <form (ngSubmit)="onLogin()">
+      <!-- Campo Correo -->
       <div class="mb-3">
-        <label class="form-label">Correo electrónico</label>
-        <input type="email" class="form-control" name="correo" [(ngModel)]="correo" required>
+        <div class="d-flex justify-content-between">
+          <label class="form-label fw-bold small">Correo electrónico o DNI institucional</label>
+          <small class="text-muted">Obligatorio</small>
+        </div>
+        <div class="input-group">
+          <span class="input-group-text bg-white border-end-0"><i class="bi bi-envelope"></i></span>
+          <input type="email" class="form-control border-start-0" name="correo" [(ngModel)]="correo" placeholder="ejemplo@bienestar.gob.es o correo personal" required>
+        </div>
+        <small class="text-muted d-block mt-1">Ingrese su dirección registrada para trámites o seguimiento.</small>
       </div>
-      <div class="mb-3">
-        <label class="form-label">Contraseña</label>
-        <input type="password" class="form-control" name="password" [(ngModel)]="password" required>
+
+      <!-- Campo Contraseña -->
+      <div class="mb-4">
+        <div class="d-flex justify-content-between">
+          <label class="form-label fw-bold small">Contraseña de acceso</label>
+          <a href="javascript:void(0)" class="text-decoration-none small" style="color: var(--azul-marino);">¿Olvidó su contraseña?</a>
+        </div>
+        <div class="input-group">
+          <span class="input-group-text bg-white border-end-0"><i class="bi bi-lock"></i></span>
+          <input [type]="verPassword ? 'text' : 'password'" class="form-control border-start-0" name="password" [(ngModel)]="password" placeholder="Escriba su clave de ingreso" required>
+          <span class="input-group-text bg-white border-start-0" style="cursor: pointer;" (click)="togglePassword()">
+            <i class="bi" [ngClass]="verPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+          </span>
+        </div>
+        <small class="text-muted d-block mt-1">Presione el icono del ojo si desea comprobar lo que escribió.</small>
       </div>
-      <button type="submit" class="btn btn-primary w-100 mb-3">Ingresar al Sistema</button>
+
+      <div class="form-check mb-4">
+        <input class="form-check-input" type="checkbox" id="recordar">
+        <label class="form-check-label small" for="recordar">Recordar mi cuenta de forma segura en este dispositivo</label>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 py-3 rounded-3 d-flex justify-content-center align-items-center gap-2">
+        Ingresar al Sistema <i class="bi bi-arrow-right"></i>
+      </button>
     </form>
 
-    <div *ngIf="error" class="alert alert-danger mt-3">
+    <div *ngIf="error" class="alert alert-danger mt-3 text-center small">
       {{ error }}
     </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-4 small">
+  <span class="text-muted">¿No tiene una cuenta creada?</span>
+  <a routerLink="/registro" class="text-decoration-none fw-bold" style="color: var(--verde-menta);">Registrarse aquí</a>
+</div>
+
+    <!-- Caja de dificultades (Ahora con SweetAlert en el botón) -->
+    <div class="bg-light rounded-4 p-3 mt-4 d-flex gap-3 align-items-start">
+      <div class="bg-success text-white rounded-circle d-flex justify-content-center align-items-center" style="width: 40px; height: 40px; flex-shrink: 0;">
+        <i class="bi bi-chat-dots-fill"></i>
+      </div>
+      <div>
+        <h6 class="fw-bold mb-1">¿Dificultades para ingresar?</h6>
+        <p class="small text-muted mb-2">Llame gratis a la línea de ayuda personalizada para personas mayores: <strong>0800-444-EDAD</strong> (0800-444-3323) o acuda a su Centro de Bienestar Local.</p>
+        <button class="btn btn-success btn-sm rounded-pill fw-bold" (click)="llamarGratis()"><i class="bi bi-telephone"></i> Llamar Gratis</button>
+      </div>
+    </div>
+
+    <div class="text-center mt-4 pt-3 border-top">
+      <small class="text-muted d-block"><i class="bi bi-shield-lock-fill text-success"></i> Conexión Segura Encriptada <span class="ms-3"><i class="bi bi-universal-access"></i></span> Norma WCAG 2.2 AAA</small>
+    </div>
+
   </div>
 </div>
+
+<!-- PIE DE PÁGINA INSTITUCIONAL -->
+<footer class="bg-light border-top py-4 mt-auto">
+  <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center text-muted small">
+    <div>
+      <h6 class="fw-bold mb-1">Atención Integral al Ciudadano</h6>
+      <p class="mb-0">Servicio público accesible para trámites, acompañamiento social, beneficios y asistencia médica.</p>
+    </div>
+    <div class="d-flex gap-4 mt-3 mt-md-0">
+      <span><i class="bi bi-headset"></i> Centro de Ayuda</span>
+      <span><i class="bi bi-telephone"></i> Línea 0800 Gratuita</span>
+    </div>
+  </div>
+</footer>

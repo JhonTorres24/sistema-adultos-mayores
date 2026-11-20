@@ -1,48 +1,252 @@
 <div class="d-flex" style="min-height: 100vh;">
-  <!-- Menú Lateral -->
-  <div class="bg-dark text-white p-3" style="width: 250px;">
-    <h4 class="text-center mb-4">Panel de Control</h4>
-    <ul class="nav flex-column">
+  
+  <!-- MENÚ LATERAL -->
+  <div class="text-white d-none d-md-flex flex-column p-4 sticky-top" style="width: 280px; background-color: var(--azul-marino); height: 100vh; flex-shrink: 0;">
+    <div class="d-flex align-items-center gap-2 mb-5">
+      <i class="bi bi-person-wheelchair fs-3"></i>
+      <div>
+        <h6 class="mb-0 fw-bold text-white" style="font-family: 'Inter', sans-serif;">Sistema Social</h6>
+        <small class="text-white-50">Adultos Mayores</small>
+      </div>
+    </div>
+
+    <ul class="nav flex-column mb-auto">
       <li class="nav-item mb-2">
-        <a class="nav-link text-white active bg-primary rounded" routerLink="/dashboard">Inicio</a>
+        <a class="nav-link text-white active rounded px-3 py-3 fw-bold d-flex align-items-center gap-3" style="background-color: rgba(255,255,255,0.1);" routerLink="/dashboard">
+          <i class="bi bi-grid-1x2"></i> Inicio
+        </a>
       </li>
       <li class="nav-item mb-2">
-        <a class="nav-link text-white" routerLink="/adultos">Registrar / Ver Adultos</a>
+        <a class="nav-link text-white-50 rounded px-3 py-3 d-flex align-items-center gap-3" routerLink="/adultos" [queryParams]="{ abrirFormulario: 'true' }">
+          <i class="bi bi-person-plus"></i> Registrar Adulto
+        </a>
       </li>
-      <li class="nav-item mt-5">
-        <button class="btn btn-danger w-100" (click)="cerrarSesion()">Cerrar Sesión</button>
+      <li class="nav-item mb-2">
+        <a class="nav-link text-white-50 rounded px-3 py-3 d-flex align-items-center gap-3" routerLink="/adultos" [queryParams]="{ verHistorial: 'true' }">
+          <i class="bi bi-house-door"></i> Historial de Visitas
+        </a>
+      </li>
+      <li class="nav-item mb-2">
+        <a class="nav-link text-white-50 rounded px-3 py-3 d-flex align-items-center gap-3" routerLink="/adultos" [queryParams]="{ verReportes: 'true' }">
+          <i class="bi bi-bar-chart"></i> Reportes
+        </a>
       </li>
     </ul>
+
+    <div class="bg-white bg-opacity-10 rounded-3 p-3 mt-4 text-white-50" style="font-size: 0.85rem;">
+      <p class="mb-1 fw-bold text-white">Soporte</p>
+      <p class="mb-0">0800-444-SENIOR</p>
+    </div>
   </div>
 
-  <!-- Contenido Principal -->
-  <div class="flex-grow-1 p-4 bg-light">
-    <h2 class="mb-4">Bienvenido al Sistema</h2>
-    <div class="row">
-      <div class="col-md-4 mb-3">
-        <div class="card shadow-sm border-primary">
-          <div class="card-body text-center">
-            <h5 class="card-title">Adultos Registrados</h5>
-            <h1 class="display-4 text-primary">{{ totalAdultos }}</h1>
+  <!-- CONTENIDO PRINCIPAL -->
+  <div class="flex-grow-1 bg-light" style="overflow-x: hidden;">
+    
+    <!-- Barra Superior -->
+    <header class="bg-white px-4 py-3 d-flex justify-content-between align-items-center border-bottom">
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn btn-light d-md-none border" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuMovil">
+          <i class="bi bi-list fs-4"></i>
+        </button>
+        <h5 class="mb-0 fw-bold">Panel de Control</h5>
+        <span class="text-muted d-none d-lg-block">| Portal de Bienestar Social</span>
+      </div>
+      
+      <div class="d-flex align-items-center gap-3">
+        <div class="btn-group bg-light rounded-pill p-1 d-none d-sm-flex">
+          <button class="btn btn-sm btn-link text-dark text-decoration-none" (click)="cambiarFuente('16px')">A</button>
+          <button class="btn btn-sm btn-link text-dark text-decoration-none" (click)="cambiarFuente('18px')">A+</button>
+          <button class="btn btn-sm btn-link text-dark text-decoration-none" (click)="cambiarFuente('20px')">A++</button>
+        </div>
+        
+        <button class="btn btn-success btn-sm rounded-pill px-3 fw-bold d-none d-md-flex align-items-center gap-2" (click)="llamarAsistencia()">
+          <i class="bi bi-telephone-fill"></i> Asistencia
+        </button>
+        
+        <div class="dropdown border-start ps-3 ms-2">
+          <button class="btn btn-light d-flex align-items-center gap-2 dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width: 35px; height: 35px;">
+              {{ nombreUsuario.charAt(0) }}
+            </div>
+            <div class="text-start d-none d-lg-block">
+              <p class="mb-0 fw-bold small">{{ nombreUsuario }}</p>
+              <small class="text-muted" style="font-size: 0.75rem;">{{ rolUsuario }}</small>
+            </div>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end shadow">
+            <li><button class="dropdown-item text-danger fw-bold" (click)="cerrarSesion()"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</button></li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    <!-- Área de Trabajo -->
+    <div class="p-3 p-md-5">
+      
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-start mb-5 gap-3">
+        <div>
+          <span class="badge bg-success bg-opacity-25 text-success rounded-pill px-3 py-2 mb-2"><i class="bi bi-check-circle-fill"></i> Sistema en línea</span>
+          <h2 class="fw-bold mb-1">Panel de Control y Monitoreo</h2>
+          <p class="text-muted small">Resumen en tiempo real del bienestar y seguimiento sociosanitario de adultos mayores.</p>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+          <button class="btn btn-outline-secondary bg-white shadow-sm fw-bold flex-grow-1" (click)="programarVisita()"><i class="bi bi-calendar-event"></i> Programar Visita</button>
+          <button routerLink="/adultos" class="btn btn-primary shadow-sm fw-bold flex-grow-1"><i class="bi bi-person-plus-fill"></i> Nuevo Registro</button>
+        </div>
+      </div>
+
+      <!-- Tarjetas de Resumen -->
+      <div class="row g-4 mb-5">
+        <div class="col-12 col-md-4">
+          <div class="card h-100 p-3 border-0">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="text-muted fw-bold mb-0">Adultos Registrados</h6>
+                <div class="bg-light rounded p-2 text-primary"><i class="bi bi-people-fill fs-5"></i></div>
+              </div>
+              <h1 class="display-4 fw-bold mb-0" style="color: var(--azul-marino);">{{ totalAdultos }}</h1>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-12 col-md-4">
+          <div class="card h-100 p-3 border-0">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="text-muted fw-bold mb-0">Visitas este mes</h6>
+                <div class="bg-light rounded p-2 text-success"><i class="bi bi-house-fill fs-5"></i></div>
+              </div>
+              <h1 class="display-4 fw-bold mb-0 text-success">{{ totalVisitas }}</h1>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+          <div class="card h-100 p-3 border-0">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="text-muted fw-bold mb-0">Alertas Activas</h6>
+                <div class="bg-light rounded p-2 text-danger"><i class="bi bi-bell-fill fs-5"></i></div>
+              </div>
+              <div class="d-flex align-items-center gap-3">
+                <h1 class="display-4 fw-bold mb-0 text-danger">{{ totalCriticos }}</h1>
+                <span class="badge bg-danger bg-opacity-10 text-danger border border-danger rounded-pill">¡Urgentes!</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-md-4 mb-3">
-        <div class="card shadow-sm border-success">
-          <div class="card-body text-center">
-            <h5 class="card-title">Visitas este mes</h5>
-            <h1 class="display-4 text-success">0</h1>
+
+      <!-- Zona de Alertas / Actividad -->
+      <div class="row g-4">
+        <div class="col-12 col-lg-8">
+          <div class="card p-4 border-0 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h5 class="fw-bold mb-0">Alertas y Seguimiento Prioritario</h5>
+              <a routerLink="/adultos" class="text-decoration-none fw-bold small" style="color: var(--verde-menta);">Ver todas <i class="bi bi-arrow-right"></i></a>
+            </div>
+            
+            <!-- SI NO HAY CRÍTICOS -->
+            <div class="bg-light rounded-3 p-3 mb-3 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3" *ngIf="totalCriticos === 0">
+              <div class="d-flex gap-3 align-items-start">
+                <div class="bg-success text-white rounded p-2 mt-1"><i class="bi bi-check-circle-fill"></i></div>
+                <div>
+                  <h6 class="fw-bold mb-1">Sin alertas críticas <span class="badge bg-success ms-2">Sistema Limpio</span></h6>
+                  <p class="text-muted small mb-1">Actualmente no hay adultos mayores en estado crítico.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- SI HAY CRÍTICOS -->
+            <div *ngIf="totalCriticos > 0">
+              <div *ngFor="let critico of listaCriticos" class="bg-danger bg-opacity-10 rounded-3 p-3 mb-3 border border-danger border-opacity-25 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                <div class="d-flex gap-3 align-items-start">
+                  <div class="bg-danger text-white rounded p-2 mt-1">
+                    <i class="bi bi-person-fill"></i>
+                  </div>
+                  <div>
+                    <h6 class="fw-bold mb-1 text-danger">{{ critico.nombre_completo }} ({{ critico.edad }} años)</h6>
+                    <p class="text-danger small mb-1">{{ critico.enfermedades || 'Sin enfermedades registradas' }}</p>
+                    <div class="small text-muted">
+                      <i class="bi bi-geo-alt-fill"></i> {{ critico.direccion }} • 
+                      <i class="bi bi-person"></i> Cuidador: {{ critico.familiar_responsable }}
+                    </div>
+                  </div>
+                </div>
+                <button class="btn btn-danger btn-sm fw-bold px-3" routerLink="/adultos">
+                  <i class="bi bi-exclamation-triangle"></i> Atender Alerta
+                </button>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+          <div class="card p-4 border-0 h-100">
+            <h5 class="fw-bold mb-4">Acciones Rápidas</h5>
+            <div class="d-grid gap-2">
+              <button class="btn btn-light text-start p-3 rounded-3 border d-flex justify-content-between align-items-center" routerLink="/adultos">
+                <span class="fw-bold">Ver Padrón</span> <i class="bi bi-arrow-right"></i>
+              </button>
+              <button class="btn btn-light text-start p-3 rounded-3 border d-flex justify-content-between align-items-center" (click)="descargarReporte()">
+                <span class="fw-bold">Descargar Reporte</span> <i class="bi bi-download"></i>
+              </button>
+              <button class="btn btn-light text-start p-3 rounded-3 border d-flex justify-content-between align-items-center" (click)="urgenciasMedicas()">
+  <span class="fw-bold text-danger">Urgencias Médicas</span> <i class="bi bi-heart-pulse"></i>
+</button>
+            </div>
+
+            <div class="mt-4 p-3 rounded-3 text-white" style="background-color: var(--verde-menta);">
+              <h6 class="fw-bold mb-1">Protocolo Activo 2026</h6>
+              <p class="small mb-0 opacity-75">Estándares WCAG AAA de accesibilidad.</p>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-md-4 mb-3">
-        <div class="card shadow-sm border-warning">
-          <div class="card-body text-center">
-            <h5 class="card-title">Alertas Activas</h5>
-            <h1 class="display-4 text-warning">0</h1>
-          </div>
-        </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MENÚ MÓVIL (Offcanvas) -->
+<div class="offcanvas offcanvas-start text-white" tabindex="-1" id="menuMovil" style="background-color: var(--azul-marino); width: 300px;">
+  <div class="offcanvas-header border-bottom border-secondary border-opacity-25">
+    <div class="d-flex align-items-center gap-2">
+      <i class="bi bi-person-wheelchair fs-3"></i>
+      <div>
+        <h6 class="mb-0 fw-bold text-white" style="font-family: 'Inter', sans-serif;">Sistema Social</h6>
+        <small class="text-white-50">Adultos Mayores</small>
       </div>
+    </div>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body d-flex flex-column">
+    <ul class="nav flex-column mb-auto">
+      <li class="nav-item mb-2">
+        <a class="nav-link text-white active rounded px-3 py-3 fw-bold d-flex align-items-center gap-3" style="background-color: rgba(255,255,255,0.1);" routerLink="/dashboard" data-bs-dismiss="offcanvas">
+          <i class="bi bi-grid-1x2"></i> Inicio
+        </a>
+      </li>
+      <li class="nav-item mb-2">
+        <a class="nav-link text-white-50 rounded px-3 py-3 d-flex align-items-center gap-3" routerLink="/adultos" [queryParams]="{ abrirFormulario: 'true' }" data-bs-dismiss="offcanvas">
+          <i class="bi bi-person-plus"></i> Registrar Adulto
+        </a>
+      </li>
+      <li class="nav-item mb-2">
+        <a class="nav-link text-white-50 rounded px-3 py-3 d-flex align-items-center gap-3" routerLink="/adultos" [queryParams]="{ verHistorial: 'true' }" data-bs-dismiss="offcanvas">
+          <i class="bi bi-house-door"></i> Historial de Visitas
+        </a>
+      </li>
+      <li class="nav-item mb-2">
+        <a class="nav-link text-white-50 rounded px-3 py-3 d-flex align-items-center gap-3" routerLink="/adultos" [queryParams]="{ verReportes: 'true' }" data-bs-dismiss="offcanvas">
+          <i class="bi bi-bar-chart"></i> Reportes
+        </a>
+      </li>
+    </ul>
+    <div class="bg-white bg-opacity-10 rounded-3 p-3 mt-4 text-white-50" style="font-size: 0.85rem;">
+      <p class="mb-1 fw-bold text-white">Soporte</p>
+      <p class="mb-0">0800-444-SENIOR</p>
     </div>
   </div>
 </div>

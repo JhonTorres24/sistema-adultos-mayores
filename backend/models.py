@@ -20,6 +20,7 @@ class AdultoMayor(Base):
     familiar_responsable = Column(String)
     telefono_contacto = Column(String)
     direccion = Column(String)
+    estado = Column(String, default="Estable")
 
 class Visita(Base):
     __tablename__ = "visitas"

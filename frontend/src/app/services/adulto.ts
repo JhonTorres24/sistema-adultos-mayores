@@ -42,4 +42,8 @@ export class AdultoService {
   crearVisita(visita: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/${visita.adulto_id}/visitas`, visita, { headers: this.getHeaders() });
   }
+
+  obtenerTotalVisitas(): Observable<{total: number}> {
+    return this.http.get<{total: number}>(`${this.apiUrl}/visitas/total`, { headers: this.getHeaders() });
+  }
 }

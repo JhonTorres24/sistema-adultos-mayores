@@ -8,12 +8,15 @@ class AdultoMayorBase(BaseModel):
     familiar_responsable: str
     telefono_contacto: str
     direccion: str
+    estado: Optional[str] = "Estable"
 
 class AdultoMayorCreate(AdultoMayorBase):
     pass
 
 class AdultoMayorResponse(AdultoMayorBase):
     id: int
+    ultima_visita_fecha: Optional[str] = None
+    ultima_visita_por: Optional[str] = None
 
     class Config:
         from_attributes = True

@@ -1,28 +1,37 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from database import SessionLocal
-from schemas.usuario import UsuarioCreate, UsuarioResponse
 from services import usuario_service
 from fastapi.security import OAuth2PasswordBearer
-from schemas.usuario import UsuarioLogin, Token
+# Importación unificada de esquemas para mantener el código limpio
+from schemas.usuario import UsuarioCreate, UsuarioResponse, UsuarioLogin, Token
 
-# Creamos el enrutador (esto se conectará en el main.py)
+# Enrutador para agrupar todas las rutas relacionadas con los Usuarios
 router = APIRouter(
     prefix="/usuarios",
     tags=["Usuarios"]
 )
 
-# Función para obtener la sesión de la base de datos
 def get_db():
+    """
+    Abre una conexión a la base de datos para la petición actual.
+    Se asegura de cerrarla al finalizar, incluso si hay errores.
+    """
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
 
-# Ruta para registrar un nuevo usuario
+# Configuración de seguridad para obtener el Token en la ruta de Login
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="usuarios/login")
+
 @router.post("/registro", response_model=UsuarioResponse, status_code=status.HTTP_201_CREATED)
 def registrar_usuario(usuario: UsuarioCreate, db: Session = Depends(get_db)):
+    """
+    Ruta para registrar un nuevo usuario en el sistema (Administrador o Cuidador).
+    Verifica que el correo electrónico no esté ya registrado en la base de datos.
+    """
     nuevo_usuario = usuario_service.registrar_usuario(db, usuario)
     if nuevo_usuario is None:
         raise HTTPException(
@@ -31,10 +40,13 @@ def registrar_usuario(usuario: UsuarioCreate, db: Session = Depends(get_db)):
         )
     return nuevo_usuario
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="usuarios/login")
-
 @router.post("/login", response_model=Token)
 def login(credenciales: UsuarioLogin, db: Session = Depends(get_db)):
+    """
+    Ruta de autenticación (Login).
+    Valida el correo y la contraseña. Si son correctos, genera y devuelve un Token JWT
+    que el Frontend debe usar para acceder a las rutas protegidas.
+    """
     # 1. Buscamos al usuario por su correo
     usuario = usuario_service.obtener_usuario_por_correo(db, credenciales.correo)
     
@@ -45,7 +57,7 @@ def login(credenciales: UsuarioLogin, db: Session = Depends(get_db)):
             detail="Correo o contraseña incorrectos"
         )
     
-    # 3. Si todo está bien, creamos el Token
+    # 3. Si todo está bien, creamos el Token con el correo y el rol del usuario
     token = usuario_service.crear_token_acceso(data={"sub": usuario.correo, "rol": usuario.rol})
     
     return {"access_token": token, "token_type": "bearer"}

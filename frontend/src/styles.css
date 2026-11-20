@@ -1,1 +1,93 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  --azul-marino: #0a2540;
+  --verde-menta: #1b8a5a;
+  --fondo-gris: #f4f7f9;
+  --texto-oscuro: #1e293b;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--fondo-gris);
+  color: var(--texto-oscuro);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Merriweather', serif;
+  color: var(--azul-marino);
+}
+
+.btn-primary {
+  background-color: var(--azul-marino);
+  border-color: var(--azul-marino);
+  font-weight: 600;
+}
+.btn-primary:hover {
+  background-color: #143656;
+}
+
+.btn-success {
+  background-color: var(--verde-menta);
+  border-color: var(--verde-menta);
+}
+
+.card {
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04) !important;
+}
+
+.form-control {
+  border-radius: 8px;
+  padding: 12px 16px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+.form-control:focus {
+  box-shadow: none;
+  border-color: var(--azul-marino);
+}
+
+/* =========================================
+   MODO ALTO CONTRASTE (ACCESIBILIDAD)
+   ========================================= */
+body.alto-contraste {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
+body.alto-contraste .card, 
+body.alto-contraste header, 
+body.alto-contraste footer,
+body.alto-contraste .bg-light,
+body.alto-contraste .form-control,
+body.alto-contraste .input-group-text {
+  background-color: #1a1a1a !important;
+  color: #fff !important;
+  border-color: #444 !important;
+}
+
+body.alto-contraste h1, 
+body.alto-contraste h2, 
+body.alto-contraste h3, 
+body.alto-contraste h4, 
+body.alto-contraste h5,
+body.alto-contraste h6, 
+body.alto-contraste label,
+body.alto-contraste .fw-bold {
+  color: #ffff00 !important; /* Texto amarillo brillante */
+}
+
+body.alto-contraste .text-muted, 
+body.alto-contraste small,
+body.alto-contraste a {
+  color: #e0e0e0 !important;
+}
+
+body.alto-contraste .btn-white {
+  background-color: #333 !important;
+  color: #fff !important;
+  border-color: #555 !important;
+}
