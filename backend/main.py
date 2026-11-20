@@ -1,3 +1,11 @@
+"""
+=============================================================================
+SISTEMA DE REGISTRO Y SEGUIMIENTO DE ADULTOS MAYORES - HUANCAYO
+Autor Principal: Jhon Torres Escalante
+Descripción: Punto de entrada principal de la API (FastAPI).
+Tecnologías: FastAPI, SQLAlchemy, PostgreSQL, JWT.
+=============================================================================
+"""
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine
