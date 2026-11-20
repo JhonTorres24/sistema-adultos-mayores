@@ -12,10 +12,9 @@ Aplicación web Full Stack desarrollada para resolver la problemática del segui
 
 ## 👥 Contribuciones del Equipo (Git)
 *   **Jhon Torres:** Desarrollo del Backend (API REST, Base de Datos, Lógica de Seguridad JWT) y Arquitectura.
-*   **Roy [Apellido]:** Desarrollo del Frontend (Diseño UI/UX, Componentes de Angular, Accesibilidad) y pruebas de integración.
+*   **Roy De la Cruz:** Desarrollo del Frontend (Diseño UI/UX, Componentes de Angular, Accesibilidad) y pruebas de integración.
 
 ## 🚀 Cómo ejecutar el proyecto localmente
-*(Instrucciones breves para el docente)*
 1. Clonar el repositorio.
 2. En el Backend: crear entorno virtual, instalar requerimientos (`pip install -r requirements.txt` - *opcional*) y configurar PostgreSQL en `database.py`.
 3. En el Frontend: ejecutar `npm install` y luego `ng serve`.
